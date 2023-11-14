@@ -23,6 +23,7 @@ import { Request, Response } from 'express';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import * as fs from 'fs';
+import { downloadFile } from './lib/download-file';
 
 const UPLOAD_DIR = './upload/files/';
 const MAX_UPLOAD_SIZE = 10; // in MB
@@ -143,5 +144,11 @@ export class AppController {
 		}
 		const file = createReadStream(join(process.cwd(), path));
 		return new StreamableFile(file);
+	}
+
+	@Get('download-file')
+	async downloadFileToUrl(@Body() data: { url: string }) {
+		await downloadFile(data.url);
+		return 'OK';
 	}
 }
